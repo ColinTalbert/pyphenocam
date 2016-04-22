@@ -1,0 +1,125 @@
+name: C:\Anaconda\envs\pyphenocam
+dependencies:
+- affine=1.2.0=py27_0
+- appdirs=1.4.0=py27_1
+- backports=1.0=py27_0
+- backports_abc=0.4=py27_0
+- beautifulsoup4=4.4.1=py27_0
+- bzip2=1.0.6=vc9_2
+- cartopy=0.14.1=np110py27_0
+- click=6.6=py27_0
+- click-plugins=1.0.3=py27_0
+- cligj=0.2.0=py27_0
+- configparser=3.5.0b2=py27_1
+- curl=7.45.0=vc9_1
+- cycler=0.10.0=py27_0
+- decorator=4.0.9=py27_0
+- entrypoints=0.2=py27_1
+- enum34=1.1.2=py27_0
+- expat=2.1.0=vc9_1
+- fiona=1.6.0=np110py27_0
+- freetype=2.5.5=vc9_0
+- funcsigs=1.0.0=py27_0
+- gdal=1.11.4=np110py27_vc9_4
+- geojson=1.3.2=py27_0
+- geos=3.4.2=vc9_1
+- git=2.6.4=0
+- hdf4=4.2.11=vc9_0
+- hdf5=1.8.15.1=vc9_4
+- html5lib=0.999=py27_0
+- ipykernel=4.3.1=py27_0
+- ipython=4.1.2=py27_1
+- ipython_genutils=0.1.0=py27_0
+- ipywidgets=4.1.1=py27_0
+- isodate=0.5.4=py27_0
+- jinja2=2.8=py27_0
+- jpeg=8d=vc9_0
+- jsonschema=2.4.0=py27_0
+- jupyter=1.0.0=py27_2
+- jupyter_client=4.2.2=py27_0
+- jupyter_console=4.1.1=py27_0
+- jupyter_core=4.1.0=py27_0
+- kealib=1.4.5=vc9_0
+- krb5=1.13.2=0
+- libgdal=2.0.0=vc9_1
+- libnetcdf=4.3.3.1=vc9_4
+- libpng=1.6.17=vc9_1
+- libtiff=4.0.6=vc9_1
+- lxml=3.6.0=py27_0
+- markupsafe=0.23=py27_1
+- matplotlib=1.5.1=np110py27_0
+- mistune=0.7.2=py27_0
+- mkl=11.3.1=0
+- mock=2.0.0=py27_0
+- nbconvert=4.2.0=py27_0
+- nbformat=4.0.1=py27_0
+- networkx=1.11=py27_0
+- nose=1.3.7=py27_0
+- notebook=4.1.0=py27_2
+- numpy=1.10.4=py27_0
+- openjpeg=2.1.0=vc9_1
+- openssl=1.0.2g=vc9_0
+- owslib=0.10.3=py27_0
+- pandas=0.18.0=np110py27_0
+- path.py=8.2=py27_0
+- pbr=1.8.1=py27_0
+- pickleshare=0.5=py27_0
+- pillow=3.2.0=py27_0
+- pip=8.1.1=py27_1
+- proj.4=4.9.1=py27_vc9_2
+- proj4=4.9.1=vc9_0
+- pycurl=7.19.5.3=py27_1
+- pyepsg=0.2.0=py27_1
+- pygments=2.1.3=py27_0
+- pyparsing=2.0.3=py27_0
+- pyproj=1.9.5.1=py27_0
+- pyqt=4.11.4=py27_5
+- pyreadline=2.1=py27_0
+- pyshp=1.2.3=py27_0
+- python=2.7.11=4
+- python-dateutil=2.5.2=py27_0
+- pytz=2016.3=py27_0
+- pyzmq=15.2.0=py27_0
+- qt=4.8.7=vc9_7
+- qtconsole=4.2.1=py27_0
+- rasterio=0.32.0=np110py27_3
+- requests=2.9.1=py27_0
+- scikit-image=0.12.3=np110py27_0
+- scipy=0.17.0=np110py27_1
+- seaborn=0.7.0=py27_0
+- setuptools=20.7.0=py27_0
+- shapely=1.5.13=np110py27_1
+- simplegeneric=0.8.1=py27_0
+- singledispatch=3.4.0.3=py27_1
+- sip=4.16.9=py27_2
+- six=1.10.0=py27_0
+- snuggs=1.3.1=py27_1
+- ssl_match_hostname=3.4.0.2=py27_1
+- suds=0.4=py27_3
+- tk=8.5.18=vc9_0
+- tornado=4.3=py27_0
+- traitlets=4.2.1=py27_0
+- vs2008_runtime=9.00.30729.1=0
+- vs2010_runtime=10.00.40219.1=0
+- wheel=0.29.0=py27_0
+- xerces-c=3.1.2=vc9_0
+- zlib=1.2.8=vc9_2
+- pip:
+  - backports-abc==0.4
+  - backports.ssl-match-hostname==3.4.0.2
+  - boto==2.39.0
+  - futures==3.0.5
+  - geocoder==1.9.0
+  - homura==0.1.0
+  - humanize==0.5.1
+  - ipython-genutils==0.1.0
+  - jupyter-client==4.2.2
+  - jupyter-console==4.1.1
+  - jupyter-core==4.1.0
+  - polyline==1.1
+  - pygaarst==0.0.1
+  - ratelim==0.1.6
+  - requests-futures==0.9.7
+  - termcolor==1.1.0
+  - usgs==0.1.9
+
