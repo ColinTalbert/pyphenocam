@@ -102,7 +102,7 @@ if not os.path.exists(landsat_dname):
     os.makedirs(landsat_dname)
 
 
-# In[11]:
+# In[ ]:
 
 from landsat.downloader import Downloader
 d = Downloader(download_dir=landsat_dname)
