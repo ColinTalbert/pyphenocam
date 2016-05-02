@@ -8,9 +8,9 @@ def initialize_config(fname):
     config.add_section('URLS')
     config.set('URLS', 'SITEURL', "http://phenocam.sr.unh.edu/webcam/roi/roilistinfo/?format=csv")
     config.set('URLS', 'ROIURL', "http://phenocam.sr.unh.edu/data/archive/{}/ROI")
-    config.set('URLS', 'FNAMEURL', "http://phenocam.sr.unh.edu/data/archive/{}/{}/{}/{}")
-    config.set('URLS', 'FNAMEURL_BROWSE', "http://phenocam.sr.unh.edu/webcam/browse/{}/{}/{}/{}")
-    config.set('URLS', 'IRFNAMEURL', "http://phenocam.sr.unh.edu/webcam/browse/{}_IR/{}/{}/{}")
+    config.set('URLS', 'FNAMEURL', "http://phenocam.sr.unh.edu/data/archive/{}/{}/{:02d}/{:02d}")
+    config.set('URLS', 'FNAMEURL_BROWSE', "http://phenocam.sr.unh.edu/webcam/browse/{}/{}/{:02d}/{:02d}")
+    config.set('URLS', 'IRFNAMEURL', "http://phenocam.sr.unh.edu/webcam/browse/{}_IR/{}/{:02d}/{:02d}")
     config.add_section('CACHEDNAME')
     config.set('CACHEDNAME', 'folder', appdirs.user_data_dir("pyphenocam", "USGS"))
 
