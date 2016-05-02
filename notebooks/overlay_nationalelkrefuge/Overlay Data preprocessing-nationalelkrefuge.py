@@ -82,27 +82,27 @@ with fiona.open(camera_fname, 'w', crs=from_epsg(4326),driver='ESRI Shapefile', 
 
 # # Download the landsat8 scene over this area
 
-# In[8]:
+# In[9]:
 
 from landsat.search import Search
 from landsat.downloader import Downloader
 
 
-# In[9]:
+# In[10]:
 
 s = Search()
 results = s.search(lat=site.y, lon=site.x, limit=100)
 scene_id = results['results'][1]['sceneID']
 
 
-# In[10]:
+# In[11]:
 
 landsat_dname = os.path.join(output_dir, 'Landsat')
 if not os.path.exists(landsat_dname):
     os.makedirs(landsat_dname)
 
 
-# In[ ]:
+# In[10]:
 
 from landsat.downloader import Downloader
 d = Downloader(download_dir=landsat_dname)
@@ -111,8 +111,13 @@ result = d.download([str(scene_id)])
 
 # In[12]:
 
-import tarfile
 scene_dname = os.path.join(landsat_dname, scene_id)
+
+
+# In[11]:
+
+import tarfile
+
 tar_fname = os.path.join(landsat_dname, scene_id + ".tar.bz")
 tar = tarfile.open(tar_fname)
 tar.extractall(path=scene_dname)
@@ -213,7 +218,7 @@ print landsat_llx, landsat_lly
 print landsat_camx, landsat_camy
 
 
-# In[23]:
+# In[21]:
 
 get_ipython().magic(u'matplotlib inline')
 fig = plt.figure(figsize=(15, 15))
@@ -229,7 +234,7 @@ ax.plot([landsat_ulx, landsat_ulx], [landsat_uly, landsat_lry], 'k-', lw=2, c='b
 ax.plot([landsat_lrx, landsat_lrx], [landsat_uly, landsat_lry], 'k-', lw=2, c='black', transform=landsat_proj)
 
 
-# In[24]:
+# In[22]:
 
 from shapely.geometry import mapping, Polygon
 import fiona
@@ -261,7 +266,7 @@ with fiona.open(boundary_fname, 'w', 'ESRI Shapefile', schema, crs=landsat.crs) 
     })
 
 
-# In[25]:
+# In[23]:
 
 from shapely.geometry import mapping, Polygon
 import fiona
@@ -300,7 +305,7 @@ with fiona.open(fishnet_fname, 'w', 'ESRI Shapefile', schema, crs=landsat.crs) a
 
 # # Create a subset of this for display purposes
 
-# In[26]:
+# In[24]:
 
 landsat_subset = sc.NDVI[ 
                 landsat_upper_row:landsat_lower_row, 
@@ -310,7 +315,12 @@ plt.scatter(landsat_cam_col-landsat_left_col, landsat_cam_row-landsat_upper_row,
 pyphenocam.plotting.format_photo_axes(plt.gca())
 
 
-# In[32]:
+# In[26]:
+
+landsat_subset
+
+
+# In[30]:
 
 landsat_subset_fname = os.path.join(landsat_subset_dname, "landsat_subset.tif")
 
@@ -323,10 +333,13 @@ new_transform = list(landsat.meta['transform'])
 new_transform[0] = landsat_ulx
 new_transform[3] = landsat_uly
 landsat_subset_meta['transform'] = tuple(new_transform)
+landsat_subset_meta['dtype'] = 'float32'
+
 import affine
 landsat_subset_meta['affine'] = affine.Affine.from_gdal(*landsat_subset_meta['transform'])
 with rasterio.open(landsat_subset_fname, 'w', **landsat_subset_meta) as dst:
-    dst.write_band(1, landsat_subset.astype(rasterio.uint16))
+    dst.write_band(1, landsat_subset.astype(rasterio.float32))
+
 
 
 # In[33]:
