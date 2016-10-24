@@ -166,6 +166,15 @@ def add_inner_title(ax, title, loc, size=None, **kwargs):
     at.txt._text.set_path_effects([withStroke(foreground="w", linewidth=3)])
     return at
 
+def bottom_align_cb(ax, im, height=0.02, shrink=0.01, yoffset=0.08):
+    
+    fig = ax.get_figure()
+    b = ax.get_position()
+    b.x0, b.width
+    cax = fig.add_axes([b.x0 + shrink, b.y0 + yoffset, 
+                            b.width - (shrink * 2), height])
+    fig.colorbar(im, cax=cax, orientation='horizontal')
+    return cax
 
 class LocatorMap(GeoAxes):
 
