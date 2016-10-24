@@ -188,6 +188,21 @@ class SiteData():
         allsites = SITES_DF  # get_sites_df()
         self.y, self.x = allsites[allsites.site == sitename].values[0][1:3]
 
+    def get_days(self, dt):
+        fnameurl = config.get_url('FNAMEURL_BROWSE')
+        url = fnameurl.format(self.sitename, dt.year, dt.month, dt.day)[:-3]
+    
+        html_page = urllib2.urlopen(url)
+        soup = _BS(html_page, "lxml")
+        ir_lookup = {}
+        days = {}
+        for link in soup.findAll("div", {"class":"calday"}):
+            monthday = link.findAll("div", {"class":"monthday"})
+            if monthday:
+                day = int(monthday[0].findAll('strong')[0].text)
+                images = int(link.findAll("div", {"class":"imagecount"})[0].text.split('=')[1])
+                days[day] = images
+        return days
 
     def get_closest_fname(self, dt):
         fnameurl = config.get_url('FNAMEURL_BROWSE')
