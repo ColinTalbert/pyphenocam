@@ -83,13 +83,12 @@ phenosite = pyphenocam.dataaccess.get_site('nationalelkrefuge')
 which_img = -197
 
 
-# In[7]:
+# In[25]:
 
 get_ipython().magic(u'matplotlib inline')
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111)
-# local_fname = phenosite.get_local_image_fname(phenosite.midday_fnames[which_img])
-local_fname = r"J:\Projects\NCCSC\phenocam\DerivedData\nationalelkrefuge\ArcScene\InputData\nationalelkrefuge_2015_12_12_103005.jpg"
+local_fname = os.path.join(base_dname, "ArcScene", "InputData", "nationalelkrefuge_2015_12_12_103005.jpg")
 # print local_fname
 # sample_image = phenosite.get_local_image(phenosite.midday_fnames[which_img])
 sample_photo_fname = phenosite.get_closest_fname(datetime(2015, 12, 12, 10, 30))
@@ -175,7 +174,7 @@ for index, cmap in enumerate([mpl.cm.Reds, mpl.cm.Greens, mpl.cm.Blues]):
 #Note that the blue channel is not used
 
 
-# In[20]:
+# In[15]:
 
 single_pixel = np.logical_and(index_grid[:,:,0]==127, index_grid[:,:,1]==242)
 
@@ -192,7 +191,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 
 # # But how do we get the actual coordinates of the pixel centroids instead of this rather arbitrary index?
 
-# In[21]:
+# In[16]:
 
 x = 1
 y = 1
@@ -200,14 +199,14 @@ y = 1
 landsat.affine *  (x, y)
 
 
-# In[22]:
+# In[17]:
 
 plt.imshow(landsat_data[0,:,:], interpolation='none')
 pyphenocam.plotting.format_photo_axes(plt.gca())
 plt.scatter(*(x, y))
 
 
-# In[23]:
+# In[21]:
 
 get_ipython().magic(u'matplotlib inline')
 import numpy as np
@@ -229,7 +228,7 @@ landsat_extents = [landsat.bounds.left, landsat.bounds.right, landsat.bounds.bot
 ax = plt.axes(projection=ax_proj)
 ax.set_extent(ax_extent, ccrs.Geodetic())
 ax.imshow(landsat_data[0, :, :], origin='upper', extent=landsat_extents, transform=landsat_proj, interpolation='none', 
-          cmap=mpl.cm.jet_r, vmin=6968, vmax=29629)
+          cmap=mpl.cm.jet_r)
 
 # # ax.set_xmargin(0.05)
 # # ax.set_ymargin(0.10)
@@ -251,7 +250,7 @@ states_provinces = cfeature.NaturalEarthFeature(
 ax.add_feature(states_provinces, edgecolor='gray')
 
 
-# In[24]:
+# In[22]:
 
 get_ipython().magic(u'matplotlib inline')
 from ipywidgets import interactive
@@ -277,7 +276,7 @@ def plot_one(col_index=127, row_index=242):
     ax_extent = [phenosite.x - 0.04, phenosite.x + 0.04, phenosite.y - 0.002, phenosite.y + 0.040]
     ax2.set_extent(ax_extent, ccrs.Geodetic())
     ax2.imshow(landsat_data[0, :, :], origin='upper', extent=landsat_extents, transform=landsat_proj, interpolation='none', 
-          cmap=mpl.cm.jet_r, vmin=6968, vmax=29629)
+          cmap=mpl.cm.jet_r)
     colx, coly = landsat.affine * (col_index, row_index)
     colx += landsat.transform[1]/2.
     coly += landsat.transform[5]/2.
