@@ -74,6 +74,9 @@ def _get_corrected_ndvi(fname, fname_ir, exposure, nir_exposure):
 
     return ndvi_c2
 
+def get_gcc(img):
+    gcc = img[:,:, 0].astype(_np.float32) / _np.ma.sum(img, axis=2)
+    return gcc
 
 def process_files(dname, rois=None):
 
