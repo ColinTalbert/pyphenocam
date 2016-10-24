@@ -154,12 +154,11 @@ def plot_gcc_and_daymet(site, ax, rois=None, start_year=None, end_year=None,
     ax.set_zorder(ax2.get_zorder()+1) # put ax in front of ax2 
     ax.patch.set_visible(False) # hide the 'canvas'
     
-def add_inner_title(ax, title, loc, size=None, **kwargs):
+def add_inner_title(ax, title, loc=1, font_kwargs=None, **kwargs):
     from matplotlib.offsetbox import AnchoredText
     from matplotlib.patheffects import withStroke
-    if size is None:
-        size = dict(size=plt.rcParams['legend.fontsize'])
-    at = AnchoredText(title, loc=loc, prop=size,
+
+    at = AnchoredText(title, loc=loc, prop=font_kwargs,
                       pad=0., borderpad=0.5,
                       frameon=False, **kwargs)
     ax.add_artist(at)
