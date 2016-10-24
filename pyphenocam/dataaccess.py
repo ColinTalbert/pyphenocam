@@ -171,7 +171,7 @@ class SiteData():
         except:
             pass
 
-        url = "http://phenocam.sr.unh.edu/webcam/browse/nationalelkrefuge/"
+        url = "http://phenocam.sr.unh.edu/webcam/browse/{}/".format(self.sitename)
         html_page = urllib2.urlopen(url)
         soup = _BS(html_page, "lxml")
 
@@ -213,7 +213,16 @@ class SiteData():
         if not self.data[dt.year].has_key(dt.month):
             raise Exception, "data for year/month {}/{} not available".format(dt.year, dt.month)
 
-        url = fnameurl.format(self.sitename, dt.year, dt.month, dt.day)
+        if not self.data[dt.year][dt.month]:
+            self.data[dt.year][dt.month] = self.get_days(dt)
+
+        day_search_order = np.vstack((np.arange(30), np.arange(30)*-1)).reshape((-1,),order='F')[1:]
+        for offset in day_search_order:
+            d = dt.day + offset
+            if self.data[dt.year][dt.month].has_key(d) and self.data[dt.year][dt.month][d] > 0:
+                break
+
+        url = fnameurl.format(self.sitename, dt.year, dt.month, dt.day+offset)
 
         html_page = urllib2.urlopen(url)
         soup = _BS(html_page, "lxml")
@@ -225,7 +234,10 @@ class SiteData():
                 ir_dt = utils.parse_fname(ir_fname)[-1]
                 ir_lookup[ir_dt] = ir_fname
 
+
         return ir_lookup[utils.nearest_date(ir_lookup.keys(), dt)]
+
+            
 
 
     def list_rois(self,):
@@ -335,3 +347,4 @@ class SiteData():
         df.index = df.date
 
         return df
+
