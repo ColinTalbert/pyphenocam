@@ -1,12 +1,16 @@
 import os as _os
+import io
 import numpy as _np
 from datetime import datetime as _datetime
 import math as _math
-import config
+from . import config
 
 from bs4 import BeautifulSoup as _BS
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+
+import requests
+import pandas as pd
 
 __all__ = ['parse_fname', 'process_files']
 
@@ -46,10 +50,14 @@ def get_matched_fnames(dname):
                 f for f in ir_fnames if f.replace('_IR_', '_') == fname][0]
             matched_fnames.append((fname, matched))
         except IndexError:
-            print "skipping", fname
+            print("skipping", fname)
 
     return matched_fnames
 
+import ssl
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
 def get_closest_ir_fname(fname):
 
@@ -58,7 +66,7 @@ def get_closest_ir_fname(fname):
     _, sitename, dt = parse_fname(just_fname)
     url = irfnameurl.format(sitename, dt.year, dt.month, dt.day)
 
-    html_page = urllib2.urlopen(url)
+    html_page = urllib.request.urlopen(url, context=ctx)
     soup = _BS(html_page, "lxml")
     ir_lookup = {}
     for link in soup.findAll('a'):
@@ -68,7 +76,7 @@ def get_closest_ir_fname(fname):
             ir_dt = parse_fname(ir_fname)[-1]
             ir_lookup[ir_dt] = ir_fname
    
-    return ir_lookup[nearest_date(ir_lookup.keys(), dt)]
+    return ir_lookup[nearest_date(list(ir_lookup.keys()), dt)]
 
 
 def convert_fname_to_ir(fname):
@@ -85,5 +93,17 @@ def dist(x1, y1, x2, y2):
     """
     return _np.linalg.norm(_np.array((x1, y1)) - _np.array((x2, y2)))
 
+
 def nearest_date(dates, pivot):
     return min(dates, key=lambda x: abs(x - pivot))
+
+
+def get_url_file(url, fname):
+    with open(fname, 'wb') as f:
+        resp = requests.get(url, verify=False)
+        f.write(resp.content)
+
+
+def pd_read_csv(url, **kwargs):
+    x = requests.get(url=url, verify=False).content
+    return pd.read_csv(io.StringIO(x.decode('utf8')), **kwargs)

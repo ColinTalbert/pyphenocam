@@ -29,14 +29,14 @@ phenosite = pyphenocam.dataaccess.get_site(site_name)
 
 # In[4]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 landsat_fishnet_fname = os.path.join(base_dname, "ArcScene", "landsat_fishnet.bmp")
 landsat_index_fname = os.path.join(base_dname, "ArcScene", "landsat_subset_index.bmp")
 
 phenosite = pyphenocam.dataaccess.get_site(site_name)
 
 closest_date = dt.datetime(2016, 5, 29, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -80,7 +80,7 @@ def get_bluesky(sample_image, sky):
 # In[8]:
 
 closest_date = dt.datetime(2016, 5, 29, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -93,13 +93,13 @@ fig, ax = plt.subplots(1, figsize=(12,5))
 blue = sample_image[:,:,2] / np.sum(sample_image, axis=2).astype(np.float32)
 ax.imshow(blue)
 pyphenocam.plotting.format_photo_axes(ax)
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[9]:
 
 closest_date = dt.datetime(2015, 9, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -113,13 +113,13 @@ blue = sample_image[:,:,2] / np.sum(sample_image, axis=2).astype(np.float32)
 ax.imshow(blue)
 pyphenocam.plotting.format_photo_axes(ax)
 
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[14]:
 
 closest_date = dt.datetime(2015, 10, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -131,7 +131,7 @@ fig, ax = plt.subplots(1, figsize=(12,5))
 ax.imshow(sample_image)
 pyphenocam.plotting.format_photo_axes(ax)
 
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[15]:
@@ -155,7 +155,7 @@ def bottom_align_cb(fig, ax, im, height=0.02, shrink=0.01, yoffset=0.08):
 # In[22]:
 
 closest_date = dt.datetime(2016, 6, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -236,14 +236,14 @@ bottom_align_cb(fig, ax_gcc, im_gcc)
 
 with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
     for month in range(2, 6):
-        print month
+        print(month)
         for day in range(1, 32):
-            print ""
-            print '\t', day, '\t',
+            print("")
+            print('\t', day, '\t', end=' ')
             for hour in range(9, 16):
-                print hour,
+                print(hour, end=' ')
                 for minute in [0, 30]:
-                    print ".",
+                    print(".", end=' ')
                     try:
                         closest_date = dt.datetime(2016, month, day, hour, minute)
                         sample_photo_fname = phenosite.get_closest_fname(closest_date)
@@ -281,8 +281,8 @@ with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
                         del corrected_ndvi
                         del corrected_ndvi_m
                         del sample_image_ir
-                    except Exception, e:
-                        print "except:", str(e)
+                    except Exception as e:
+                        print("except:", str(e))
                         try:
                             del im
                             del im2
@@ -331,14 +331,14 @@ date_title = pyphenocam.plotting.add_inner_title(ax_ndvi, "{dt.month}/{dt.day}/{
 
 with writer.saving(fig, r'C:\temp_colin\downloads\Python_exploration\natelk.mp4', 100):
     for month in range(5, 6):
-        print month
+        print(month)
         for day in range(1, 4):
-            print ""
-            print '\t', day, '\t',
+            print("")
+            print('\t', day, '\t', end=' ')
             for hour in range(9, 15):
-                print hour,
+                print(hour, end=' ')
                 for minute in [0, 30]:
-                    print ".",
+                    print(".", end=' ')
                     try:
                         closest_date = dt.datetime(2016, month, day, hour, minute)
                         sample_photo_fname = phenosite.get_closest_fname(closest_date)

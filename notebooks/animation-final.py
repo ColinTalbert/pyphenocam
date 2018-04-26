@@ -52,7 +52,7 @@ sky = trans.resize(sky, (sample_image.shape[0], sample_image.shape[1]), preserve
 
 # In[5]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig, ax = plt.subplots(1, figsize=(12,5))
 ax.imshow(sample_image)
 ax.imshow(sky, alpha=0.6, cmap=mpl.cm.jet_r)
@@ -136,7 +136,7 @@ draped_dates = [date_from_fname(f) for f in draped_fnames]
 
 # In[8]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 
 
 def plot_one(closest_date):
@@ -191,14 +191,14 @@ def plot_one(closest_date):
   
 
 closest_date = dt.datetime(2015, 9, 3, 16, 0)
-print closest_date
+print(closest_date)
 
 plot_one(closest_date)
 
 
 # In[9]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 
 
 def plot_one_no_landsat(closest_date, fig=None, axes=None):
@@ -264,7 +264,7 @@ def plot_one_no_landsat(closest_date, fig=None, axes=None):
   
 
 closest_date = dt.datetime(2015, 9, 4, 16, 0)
-print closest_date
+print(closest_date)
 
 plot_one_no_landsat(closest_date)
 
@@ -281,27 +281,27 @@ writer = FFMpegWriter(fps=27, bitrate=5000, metadata=metadata)
 fig, axes = plot_one_no_landsat(closest_date)
 
 with writer.saving(fig, os.path.join(base_dname, 'natelk_ndvi_gcc.mp4'), 100):
-    years = phenosite.data.keys()
+    years = list(phenosite.data.keys())
     years.sort()
     for year in years:
-        print year
-        months = phenosite.data[year].keys()
+        print(year)
+        months = list(phenosite.data[year].keys())
         months.sort()
         for month in months:
-            print '\t', month
+            print('\t', month)
             if not phenosite.data[year][month]:
                 mdate = dt.datetime(year, month, 1, 12, 30)
                 phenosite.data[year][month] = phenosite.get_days(mdate)
 
-            days = phenosite.data[year][month].keys()
+            days = list(phenosite.data[year][month].keys())
             days.sort()
             for day in days:
                 if phenosite.data[year][month][day] > 0:
-                    print '\t\t', day, '  hour:',
+                    print('\t\t', day, '  hour:', end=' ')
                     for hour in range(9, 16):
-                        print hour,
+                        print(hour, end=' ')
                         for minute in [0, 30]:
-                            print ".",
+                            print(".", end=' ')
                             closest_date = dt.datetime(year, month, day, hour, minute)
                             try:
                                 fig, axes = plot_one_no_landsat(closest_date, fig, axes)
@@ -309,9 +309,9 @@ with writer.saving(fig, os.path.join(base_dname, 'natelk_ndvi_gcc.mp4'), 100):
                                 for ax in axes:
                                     ax.cla()
                             except:
-                                print "<<<fail>>>"
-                print ''
-print "all done"
+                                print("<<<fail>>>")
+                print('')
+print("all done")
 
 
 # # Data check
@@ -348,7 +348,7 @@ drapped_landsat_data, _ = draped_data(closest_date)
 
 # In[44]:
 
-get_ipython().magic(u'matplotlib notebook')
+get_ipython().magic('matplotlib notebook')
 from ipywidgets import interactive
 
 col_index, row_index = 0,0
@@ -420,14 +420,14 @@ interactive(plot_one, col_index=(0, landsat.shape[0], 1), row_index=(0, landsat.
 
 with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
     for month in range(2, 6):
-        print month
+        print(month)
         for day in range(1, 32):
-            print ""
-            print '\t', day, '\t',
+            print("")
+            print('\t', day, '\t', end=' ')
             for hour in range(9, 16):
-                print hour,
+                print(hour, end=' ')
                 for minute in [0, 30]:
-                    print ".",
+                    print(".", end=' ')
                     try:
                         closest_date = dt.datetime(2016, month, day, hour, minute)
                         sample_photo_fname = phenosite.get_closest_fname(closest_date)
@@ -465,8 +465,8 @@ with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
                         del corrected_ndvi
                         del corrected_ndvi_m
                         del sample_image_ir
-                    except Exception, e:
-                        print "except:", str(e)
+                    except Exception as e:
+                        print("except:", str(e))
                         try:
                             del im
                             del im2
@@ -525,14 +525,14 @@ with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
 
 # In[4]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 landsat_fishnet_fname = os.path.join(base_dname, "ArcScene", "landsat_fishnet.bmp")
 landsat_index_fname = os.path.join(base_dname, "ArcScene", "landsat_subset_index.bmp")
 
 phenosite = pyphenocam.dataaccess.get_site(site_name)
 
 closest_date = dt.datetime(2016, 5, 29, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -573,7 +573,7 @@ def get_bluesky(sample_image, sky):
 # In[8]:
 
 closest_date = dt.datetime(2016, 5, 29, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -586,13 +586,13 @@ fig, ax = plt.subplots(1, figsize=(12,5))
 blue = sample_image[:,:,2] / np.sum(sample_image, axis=2).astype(np.float32)
 ax.imshow(blue)
 pyphenocam.plotting.format_photo_axes(ax)
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[9]:
 
 closest_date = dt.datetime(2015, 9, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -606,13 +606,13 @@ blue = sample_image[:,:,2] / np.sum(sample_image, axis=2).astype(np.float32)
 ax.imshow(blue)
 pyphenocam.plotting.format_photo_axes(ax)
 
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[14]:
 
 closest_date = dt.datetime(2015, 10, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -624,7 +624,7 @@ fig, ax = plt.subplots(1, figsize=(12,5))
 ax.imshow(sample_image)
 pyphenocam.plotting.format_photo_axes(ax)
 
-print get_bluesky(sample_image, sky)
+print(get_bluesky(sample_image, sky))
 
 
 # In[12]:
@@ -653,7 +653,7 @@ def bottom_align_cb(fig, ax, im, height=0.02, shrink=0.01, yoffset=0.08):
 # In[22]:
 
 closest_date = dt.datetime(2016, 6, 1, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -734,14 +734,14 @@ bottom_align_cb(fig, ax_gcc, im_gcc)
 
 with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
     for month in range(2, 6):
-        print month
+        print(month)
         for day in range(1, 32):
-            print ""
-            print '\t', day, '\t',
+            print("")
+            print('\t', day, '\t', end=' ')
             for hour in range(9, 16):
-                print hour,
+                print(hour, end=' ')
                 for minute in [0, 30]:
-                    print ".",
+                    print(".", end=' ')
                     try:
                         closest_date = dt.datetime(2016, month, day, hour, minute)
                         sample_photo_fname = phenosite.get_closest_fname(closest_date)
@@ -779,8 +779,8 @@ with writer.saving(fig, os.path.join(base_dname, 'natelk.mp4'), 100):
                         del corrected_ndvi
                         del corrected_ndvi_m
                         del sample_image_ir
-                    except Exception, e:
-                        print "except:", str(e)
+                    except Exception as e:
+                        print("except:", str(e))
                         try:
                             del im
                             del im2
@@ -829,14 +829,14 @@ date_title = pyphenocam.plotting.add_inner_title(ax_ndvi, "{dt.month}/{dt.day}/{
 
 with writer.saving(fig, r'C:\temp_colin\downloads\Python_exploration\natelk.mp4', 100):
     for month in range(5, 6):
-        print month
+        print(month)
         for day in range(1, 4):
-            print ""
-            print '\t', day, '\t',
+            print("")
+            print('\t', day, '\t', end=' ')
             for hour in range(9, 15):
-                print hour,
+                print(hour, end=' ')
                 for minute in [0, 30]:
-                    print ".",
+                    print(".", end=' ')
                     try:
                         closest_date = dt.datetime(2016, month, day, hour, minute)
                         sample_photo_fname = phenosite.get_closest_fname(closest_date)

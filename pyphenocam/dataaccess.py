@@ -1,19 +1,20 @@
 # pyphenocam
 
 import os as _os
-import config
+from . import config
 
 import numpy as np
 
 from bs4 import BeautifulSoup as _BS
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 import re
+import requests
 
 import pandas as pd
 
-import utils
-import imageprocessing
+from . import utils
+from . import imageprocessing
 
 __all__ = ['_get_lines', 'parse_fname', 'process_files']
 
@@ -22,7 +23,9 @@ def get_sites_df():
     """Returns a pandas data frame with a list of all the phenocam sites
     """
     url = "http://phenocam.sr.unh.edu/webcam/network/table"
-    df = pd.read_html(url)[0]
+    r = requests.get('https://phenocam.sr.unh.edu/webcam/network/table')
+    df = pd.read_html(r.text)[0]
+
     df.columns = ['site', 'lat', 'lon', 'elevation', 'description']
     return df
     #return pd.read_csv(config.get_url('SITEURL'))
@@ -52,7 +55,7 @@ def get_site(sitename='harvard', cache_dname=None, load_all=False):
     """
     """
     if not sitename in get_sitenames():
-        raise Exception, "Site {} not in network".format(sitename)
+        raise Exception("Site {} not in network".format(sitename))
 
     if not cache_dname:
         site_dname = config.get_cache_dname()
@@ -75,6 +78,10 @@ ROI_TYPES = {'AG': 'Agriculture',
              'WL': 'Wetland',
              'XX': 'Mixed/Canopy/Other'}
 
+import ssl
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
 class SiteData():
 
@@ -100,7 +107,9 @@ class SiteData():
         self.others = []
         self.roi_url = "http://phenocam.sr.unh.edu/data/archive/{}/ROI".format(
             sitename)
-        html_page = urllib2.urlopen(self.roi_url)
+
+        html_page = urllib.request.urlopen(self.roi_url, context=ctx)
+
         soup = _BS(html_page, "lxml")
         for link in soup.findAll('a'):
             href = link.get('href')
@@ -154,9 +163,14 @@ class SiteData():
                         v[:-4]] = self.rois[roitype][which][length].get(v[:-4], {})
                     self.rois[roitype][which][length][v[:-4]] = csv
         try:
-            one_day_fname = [c for c in self.csvs if "_1day_" in c][0]
-            self.one_day = pd.read_csv(
-                self.roi_url + '/' + one_day_fname, comment="#", parse_dates=['date'])
+            one_day_fname = [c for c in self.csvs if "_1day" in c][0]
+
+            url=self.roi_url + '/' + one_day_fname
+            self.one_day = utils.pd_read_csv(url, comment="#", parse_dates=['date'])
+
+
+            # self.one_day = pd.read_csv(
+            #     self.roi_url + '/' + one_day_fname, comment="#", parse_dates=['date'])
             self.one_day.index = self.one_day.date
             self.midday_fnames = self.one_day.midday_filename.tolist()
             self.midday_fnames = [
@@ -172,7 +186,7 @@ class SiteData():
             pass
 
         url = "http://phenocam.sr.unh.edu/webcam/browse/{}/".format(self.sitename)
-        html_page = urllib2.urlopen(url)
+        html_page = urllib.request.urlopen(url, context=ctx)
         soup = _BS(html_page, "lxml")
 
         years = {}
@@ -192,7 +206,7 @@ class SiteData():
         fnameurl = config.get_url('FNAMEURL_BROWSE')
         url = fnameurl.format(self.sitename, dt.year, dt.month, dt.day)[:-3]
     
-        html_page = urllib2.urlopen(url)
+        html_page = urllib.request.urlopen(url, context=ctx)
         soup = _BS(html_page, "lxml")
         ir_lookup = {}
         days = {}
@@ -207,11 +221,11 @@ class SiteData():
     def get_closest_fname(self, dt):
         fnameurl = config.get_url('FNAMEURL_BROWSE')
 
-        if not self.data.has_key(dt.year):
-            raise Exception, "data for year {} not available".format(dt.year)
+        if dt.year not in self.data:
+            raise Exception("data for year {} not available".format(dt.year))
 
-        if not self.data[dt.year].has_key(dt.month):
-            raise Exception, "data for year/month {}/{} not available".format(dt.year, dt.month)
+        if dt.month not in self.data[dt.year]:
+            raise Exception("data for year/month {}/{} not available".format(dt.year, dt.month))
 
         if not self.data[dt.year][dt.month]:
             self.data[dt.year][dt.month] = self.get_days(dt)
@@ -219,12 +233,12 @@ class SiteData():
         day_search_order = np.vstack((np.arange(30), np.arange(30)*-1)).reshape((-1,),order='F')[1:]
         for offset in day_search_order:
             d = dt.day + offset
-            if self.data[dt.year][dt.month].has_key(d) and self.data[dt.year][dt.month][d] > 0:
+            if d in self.data[dt.year][dt.month] and self.data[dt.year][dt.month][d] > 0:
                 break
 
         url = fnameurl.format(self.sitename, dt.year, dt.month, dt.day+offset)
 
-        html_page = urllib2.urlopen(url)
+        html_page = urllib.request.urlopen(url, context=ctx)
         soup = _BS(html_page, "lxml")
         ir_lookup = {}
         for link in soup.findAll('a'):
@@ -235,25 +249,25 @@ class SiteData():
                 ir_lookup[ir_dt] = ir_fname
 
 
-        return ir_lookup[utils.nearest_date(ir_lookup.keys(), dt)]
+        return ir_lookup[utils.nearest_date(list(ir_lookup.keys()), dt)]
 
             
 
 
     def list_rois(self,):
         """Returns a list of the rois associated with this site"""
-        return self.rois.keys()
+        return list(self.rois.keys())
 
     def get_roi_fname(self, roi_type=None, roi_sequence=None, roi_num=None):
         """Returns a local filename to the roi request
         Downloads a local copy if one doesn't exist"""
 
         if not roi_type:
-            roi_type = self.rois.keys()[0]
+            roi_type = list(self.rois.keys())[0]
         if not roi_sequence:
-            roi_sequence = self.rois[roi_type]['mask'].keys()[0]
+            roi_sequence = list(self.rois[roi_type]['mask'].keys())[0]
         if not roi_num:
-            roi_num = self.rois[roi_type]['mask'][roi_sequence].keys()[0]
+            roi_num = list(self.rois[roi_type]['mask'][roi_sequence].keys())[0]
 
         roi_fname = self.rois[roi_type]['mask'][roi_sequence][roi_num]
         local_fname = _os.path.join(self.site_dname, self.sitename, roi_fname)
@@ -261,7 +275,7 @@ class SiteData():
 
         if not _os.path.exists(local_fname):
             roi_tif_url = self.roi_url + "/" + roi_fname
-            urllib.urlretrieve(roi_tif_url, local_fname)
+            utils.get_url_file(roi_tif_url, local_fname)
 
         return local_fname
 
@@ -275,12 +289,12 @@ class SiteData():
             roi = np.ma.masked_where(roi == 0, roi)
         return roi
 
-    def convert_fname_to_url(self, fname):
+    def convert_fname_to_url(self, fname, IR=False):
         """returns the full url to a specified fname 
         """
         site, year, month, day, time = fname.split('_')
         url = "http://phenocam.sr.unh.edu/data/archive/{}/{}/{}/{}".format(
-            site, year, month, fname)
+                site, year, month, fname)
         return url
 
     def convert_fname_to_cachefname(self, fname):
@@ -296,6 +310,7 @@ class SiteData():
         """
 
         url = self.convert_fname_to_url(fname)
+        print(url)
         local_fname = self.convert_fname_to_cachefname(fname)
         local_dname = _os.path.split(local_fname)[0]
 
@@ -303,14 +318,15 @@ class SiteData():
             _os.makedirs(local_dname)
 
         if not _os.path.exists(local_fname):
-            urllib.urlretrieve(url, local_fname)
+            utils.get_url_file(url, local_fname)
 
         if IR:
             ir_fname = utils.convert_fname_to_ir(fname)
             local_ir_fname = utils.convert_fname_to_ir(local_fname)
             if not _os.path.exists(local_ir_fname):
-                ir_url = url.replace(fname, ir_fname)
-                urllib.urlretrieve(ir_url, local_ir_fname)
+                ir_url = self.convert_fname_to_url(fname)
+                print(ir_url)
+                utils.get_url_file(ir_url, local_ir_fname)
 
         if IR:
             return local_ir_fname
@@ -338,12 +354,16 @@ class SiteData():
             midday_fname = utils.fcl(self.one_day, which).midday_filename
         return self.get_local_image(midday_fname)
 
-    def get_data(self, roi_type=None, which='gcc90', length='1day', version='v4'):
+    def get_data(self, roi_type=None, which='gcc90', length='1day', version='max'):
         if not roi_type:
-            roi_type = self.rois.keys()[0]
+            roi_type = list(self.rois.keys())[0]
 
-        df = pd.read_csv(
-            self.roi_url + '/' + self.rois[roi_type][which][length][version], comment="#", parse_dates=['date'])
+        if version == 'max':
+            version = max(list(self.rois[roi_type][which][length].keys()))
+
+        df = utils.pd_read_csv(
+                self.roi_url + '/' + self.rois[roi_type][which][length][version], comment="#", parse_dates=['date'])
+
         df.index = df.date
 
         return df

@@ -127,7 +127,7 @@ def _get_binary(raw_data):
         binary = raw_data[:, :, 0] > thresh
         #binary = binary[:, :, 0]
     except ValueError:
-        print 'valueerror'
+        print('valueerror')
         binary = _np.ones(raw_data.shape).astype('bool')
 
     return binary
@@ -172,7 +172,7 @@ def _return_num(num_image):
     """Given a binary array of a single digit
     returns the digit (string character) of the matching image in our DIGITDICT
     """
-    for digit, digit_image in DIGITDICT.iteritems():
+    for digit, digit_image in DIGITDICT.items():
         if _np.array_equal(digit_image, num_image):
             return digit
 
@@ -183,7 +183,7 @@ def _return_char(num_image):
     """Given a binary array of a single digit
     returns the digit (string character) of the matching image in our DIGITDICT
     """
-    for digit, digit_image in DIGITDICT_FULL.iteritems():
+    for digit, digit_image in DIGITDICT_FULL.items():
         if _np.array_equal(digit_image, num_image):
             return digit
 
@@ -225,8 +225,8 @@ def get_temp_exposure(fname):
 
 # load a dictionary with the binary pattern for each numeric digit
 _digits_fname = _resource_filename(__name__, 'data/DIGITDICT.p')
-DIGITDICT = _pickle.load(open(_digits_fname, "rb"))
+DIGITDICT = _pickle.load(open(_digits_fname, "rb"), encoding='bytes')
 
 # load a dictionary with the binary pattern for each character
 _digits_full_fname = _resource_filename(__name__, 'data/DIGITDICT_FULL.p')
-DIGITDICT_FULL = _pickle.load(open(_digits_full_fname, "rb"))
+DIGITDICT_FULL = _pickle.load(open(_digits_full_fname, "rb"), encoding='latin1')

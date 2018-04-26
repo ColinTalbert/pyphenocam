@@ -37,7 +37,7 @@ sites.head(4)
 
 # In[5]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(12, 12))
 ax_locatior = fig.add_axes(pyphenocam.plotting.LocatorMap(fig=fig))
 
@@ -46,7 +46,7 @@ ax_locatior = fig.add_axes(pyphenocam.plotting.LocatorMap(fig=fig))
 
 # In[6]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import cartopy
 
 import cartopy.feature as cfeature
@@ -91,7 +91,7 @@ aligatorriver = pyphenocam.dataaccess.get_site('alligatorriver')
 
 # In[8]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(18, 12))
 ax = fig.add_subplot(111)
 date_of_interest = dt.datetime(2013, 6, 7)
@@ -118,7 +118,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 
 # In[10]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 tonzi = pyphenocam.dataaccess.get_site('tonzi')
 
 fig = plt.figure(figsize=(18, 12))
@@ -160,7 +160,7 @@ ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
 
 # In[25]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 sns.set_style('white') 
 
 from IPython.html.widgets import *

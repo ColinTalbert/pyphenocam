@@ -43,20 +43,20 @@ for scene in ndvi_fnames+gcc_fnames:
     jday = scene[13:16]
     date = dt.datetime(int(year), 1, 1, 12) + dt.timedelta(int(jday))
     which = scene.split('_')[1].split('.')[0]
-    if not scene_data.has_key(date):
+    if date not in scene_data:
         scene_data[date] = {}
     data = rasterio.open(os.path.join(landsat_dname, scene)).read(1, masked=True)
     cloud_data = rasterio.open(os.path.join(landsat_dname, scene).replace(which, 'cloud')).read(1)
     data.mask += cloud_data==4
     scene_data[date][which] = data
     
-scene_dates= scene_data.keys()
+scene_dates= list(scene_data.keys())
 scene_dates.sort()
 
 
 # In[6]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
@@ -79,7 +79,7 @@ for i, scene_date in enumerate(scene_dates):
     
 grid.cbar_axes[0].colorbar(im)
 
-fig.suptitle(u"Landsat8 Luo-Trishchenko-Khlopenkov clouds masked", fontsize=20, y=.95)
+fig.suptitle("Landsat8 Luo-Trishchenko-Khlopenkov clouds masked", fontsize=20, y=.95)
 # plt.tight_layout()
 
 fig.savefig(os.path.join(r"J:\Projects\NCCSC\phenocam\Doc\Presentation", "landsatscenes.jpg"), dpi=270)
@@ -87,7 +87,7 @@ fig.savefig(os.path.join(r"J:\Projects\NCCSC\phenocam\Doc\Presentation", "landsa
 
 # In[ ]:
 
-get_ipython().magic(u'matplotlib notebook')
+get_ipython().magic('matplotlib notebook')
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
@@ -117,14 +117,14 @@ site = pyphenocam.dataaccess.get_site(site_name)
 
 # In[15]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 landsat_fishnet_fname = os.path.join(base_dname, "ArcScene", "landsat_fishnet.bmp")
 landsat_index_fname = os.path.join(base_dname, "ArcScene", "landsat_subset_index.bmp")
 
 phenosite = pyphenocam.dataaccess.get_site(site_name)
 
 closest_date = dt.datetime(2016, 5, 29, 12, 30)
-print closest_date
+print(closest_date)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
@@ -148,9 +148,9 @@ grid = ImageGrid(fig, 111,  # similar to subplot(111)
                     cbar_mode="single",)
 
 for i, scene_date in enumerate(scene_dates):
-    print scene_date,
+    print(scene_date, end=' ')
     closest_photo_fname = phenosite.get_closest_fname(scene_date)
-    print closest_photo_fname
+    print(closest_photo_fname)
     im =grid[i].imshow(phenosite.get_local_image(closest_photo_fname))
     pyphenocam.plotting.format_photo_axes(grid[i])
 grid.cbar_axes[0].colorbar(im)

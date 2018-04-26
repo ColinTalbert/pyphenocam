@@ -59,7 +59,7 @@ landsat_data = landsat.read()
 
 # In[4]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 plt.imshow(landsat_data[0,:,:], interpolation='none')
 pyphenocam.plotting.format_photo_axes(plt.gca())
 
@@ -85,7 +85,7 @@ which_img = -197
 
 # In[25]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111)
 local_fname = os.path.join(base_dname, "ArcScene", "InputData", "nationalelkrefuge_2015_12_12_103005.jpg")
@@ -101,7 +101,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 # plt.legend(loc=1)
 
 exposure = pyphenocam.headerextraction.get_exposure(local_fname)
-print "Extracted exposure: ", exposure
+print("Extracted exposure: ", exposure)
 
 
 # ### Our landsat grid image create in ArcScene
@@ -208,7 +208,7 @@ plt.scatter(*(x, y))
 
 # In[21]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy
@@ -252,7 +252,7 @@ ax.add_feature(states_provinces, edgecolor='gray')
 
 # In[22]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 from ipywidgets import interactive
 
 col_index, row_index = 0,0

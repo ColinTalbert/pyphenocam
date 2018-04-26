@@ -8,8 +8,8 @@ import math as _math
 import skimage as _skimage
 import skimage.io as _skimageio
 
-import utils
-import headerextraction
+from . import utils
+from . import headerextraction
 
 __all__ = ['get_corrected_ndvi']
 
@@ -111,7 +111,7 @@ def process_files(dname, rois=None):
                     ndvi = _get_corrected_ndvi(
                         fname, irfname, exposure, irexposure)
                     ndvi_ans = {}
-                    for label, roi in rois.iteritems():
+                    for label, roi in rois.items():
                         ndvi_ans[label] = _np.nanmean(ndvi[roi])
 
                     ans.update(ndvi_ans)
@@ -120,13 +120,13 @@ def process_files(dname, rois=None):
                 results[short_fname] = ans
                 results[short_fname_ir] = ans_ir
                 file_done = True
-                print '.',
-            except Exception, e:
-                print 'x',
+                print('.', end=' ')
+            except Exception as e:
+                print('x', end=' ')
                 attempts += 1
                 if attempts == 10:
-                    print str(e)
-                    print ans
-                    print fname, 'FAILED!!!!!!!!!!!!!!!!!!!!!!!!\n'
+                    print(str(e))
+                    print(ans)
+                    print(fname, 'FAILED!!!!!!!!!!!!!!!!!!!!!!!!\n')
 
     return results

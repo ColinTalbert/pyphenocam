@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, sys ,csv, time, urllib
+import os, sys ,csv, time, urllib.request, urllib.parse, urllib.error
         
 def download_Daymet(site="Daymet",lat=36.0133,lon=-84.2625,start_yr=1980,end_yr=2012, as_dataframe=True):
     """
@@ -16,7 +16,7 @@ def download_Daymet(site="Daymet",lat=36.0133,lon=-84.2625,start_yr=1980,end_yr=
     if start_yr >= 1980 & end_yr <= max_year:        
     
         # if the year range is valid, create a string of valid years
-        year_range = range(start_yr, end_yr)
+        year_range = list(range(start_yr, end_yr))
     
         # convert to string and strip the brackets and spaces
         year_range = str(year_range).strip('[]')
@@ -34,7 +34,7 @@ def download_Daymet(site="Daymet",lat=36.0133,lon=-84.2625,start_yr=1980,end_yr=
         daymet_file = str(site)+"_"+str(start_yr)+"_"+str(end_yr)+'.csv' 
   
         # download the daymet data (if available)
-        urllib.urlretrieve(download_string,daymet_file)
+        urllib.request.urlretrieve(download_string,daymet_file)
 
         if os.path.getsize(daymet_file) == 0:
             os.remove(daymet_file)
@@ -76,9 +76,10 @@ if __name__ == "__main__":
     
     for site in sites:
         try:
-            download_Daymet(site=str(site[0]),lat=site[1],lon=site[2],start_yr=1980,end_yr=max_year)
+            download_Daymet(site=str(site[0]), lat=site[1], lon=site[2],
+                            start_yr=1980, end_yr=max_year)
         except NameError:
-            print "Error: check error messages!"
+            print("Error: check error messages!")
             
             # uncomment if you want extensive debugging info
             # raise 

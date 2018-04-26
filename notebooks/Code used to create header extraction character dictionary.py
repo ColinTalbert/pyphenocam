@@ -52,7 +52,7 @@ quickbird = pyphenocam.dataaccess.get_site('quickbird')
 
 # In[4]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(18, 12))
 ax = fig.add_subplot(111)
 local_fname = quickbird.get_local_image_fname(quickbird.midday_fnames[0])
@@ -130,7 +130,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 # In[12]:
 
 line1_ans = 'HarvardForestWebcamFriApr0411:31:432008ESTExposure:402'
-line2_ans = u'Cameratemp32.0°CAirtemp2.5°C'
+line2_ans = 'Cameratemp32.0°CAirtemp2.5°C'
 line3_ans = 'RH0%Pressure976.0mb'
 
 
@@ -158,7 +158,7 @@ for line_photo, line_ans in zip([line1, line2, line3],
     for digit_label, answer in zip(reversed(digit_labels), reversed(line_ans)):
 #         print digit_label, answer
         digit_dict[answer] =pyphenocam.headerextraction._get_digit(line_binary, labeled_image, digit_label)
-    print '\n'
+    print('\n')
 
 
 # In[16]:
@@ -166,8 +166,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
 #these characters are still missing from the dictionary
 import string
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower,
+    if lower not in list(digit_dict.keys()):
+        print(lower, end=' ')
 
 
 # # 1st freemanggrass
@@ -222,8 +222,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
 # In[23]:
 
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower
+    if lower not in list(digit_dict.keys()):
+        print(lower)
 
 
 # # 1st humnokericea photo
@@ -278,8 +278,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
 # In[30]:
 
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower
+    if lower not in list(digit_dict.keys()):
+        print(lower)
 
 
 # # 1st jasperrridge
@@ -302,7 +302,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 # In[33]:
 
 line1_ans = 'jasperridge-NetCamSCIR-SunApr0111:31:062012PST'
-line2_ans = u'Temperature:37.5°Cinternal'
+line2_ans = 'Temperature:37.5°Cinternal'
 line3_ans = 'Exposure:440'
 
 line1, line2, line3, line4 = pyphenocam.headerextraction._get_lines(local_fname)
@@ -324,8 +324,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
         digit_dict[answer] =pyphenocam.headerextraction._get_digit(line_binary, labeled_image, digit_label)
 
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower
+    if lower not in list(digit_dict.keys()):
+        print(lower)
 
 
 # # sweetbriar
@@ -370,8 +370,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
         digit_dict[answer] =pyphenocam.headerextraction._get_digit(line_binary, labeled_image, digit_label)
 
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower
+    if lower not in list(digit_dict.keys()):
+        print(lower)
 
 
 # # bozeman
@@ -416,8 +416,8 @@ for line_photo, line_ans in zip([line1, line2, line3],
         digit_dict[answer] =pyphenocam.headerextraction._get_digit(line_binary, labeled_image, digit_label)
 
 for lower in string.ascii_lowercase:
-    if lower not in digit_dict.keys():
-        print lower
+    if lower not in list(digit_dict.keys()):
+        print(lower)
 
 
 # # Check our work 
@@ -431,7 +431,7 @@ def show_digit(digit):
     plt.imshow(digit_dict[str(digit)], interpolation='nearest')
 
 w = widgets.Dropdown(
-    options=digit_dict.keys(),
+    options=list(digit_dict.keys()),
     value='2',
     description='Number:',
 )
@@ -451,8 +451,8 @@ pickle.dump(digit_dict, open( outfname, "wb" ) )
 # In[45]:
 
 for upper in string.ascii_uppercase:
-    if upper not in digit_dict.keys():
-        print upper,
+    if upper not in list(digit_dict.keys()):
+        print(upper, end=' ')
 
 
 # # Try it out on a new site and a random photo
@@ -468,7 +468,7 @@ import random
 
 random_sitename = random.choice(sitenames)
 random_site = pyphenocam.dataaccess.get_site(random_sitename)
-print "Random site: ", random_sitename
+print("Random site: ", random_sitename)
 
 fig = plt.figure(figsize=(18, 12))
 ax = fig.add_subplot(111)
@@ -481,5 +481,5 @@ pyphenocam.plotting.format_photo_axes(ax)
 line1, line2, line3, line4 = pyphenocam.headerextraction._get_lines(local_fname)
 for line in [line1, line2, line3]:
     line_binary = pyphenocam.headerextraction._get_binary(line)
-    print pyphenocam.headerextraction._extract_digits(line_binary)
+    print(pyphenocam.headerextraction._extract_digits(line_binary))
 

@@ -60,7 +60,7 @@ jday = 153
 
 # In[6]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 landsat_dname = os.path.join(base_dname, 'Landsat')
 scene_name = [f for f in os.listdir(landsat_dname) if f.startswith('LC')][0]                            
 
@@ -77,7 +77,7 @@ landsat_proj = ccrs.UTM(zone=utm_zone, globe=ccrs.Globe(datum='WGS84',
 landsat_extents = [landsat.bounds.left, landsat.bounds.right, 
                    landsat.bounds.bottom, landsat.bounds.top]
 
-print scene_name
+print(scene_name)
 fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(projection=landsat_proj)
 
@@ -101,7 +101,7 @@ elev_extents = [elev.bounds.left, elev.bounds.right, elev.bounds.bottom, elev.bo
 
 # In[9]:
 
-get_ipython().magic(u'matplotlib notebook')
+get_ipython().magic('matplotlib notebook')
 fig = plt.figure(figsize=(10, 10))
 ax = plt.axes()#projection=landsat_proj)
 im = ax.imshow(dem_data, origin='upper', #extent=elev_extents, transform=landsat_proj, 
@@ -200,7 +200,7 @@ def calc_slope(est):
 
 # In[14]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import matplotlib.pyplot as plt
 import numpy as np
 import statsmodels.api as sm
@@ -291,7 +291,7 @@ set_aspect_equal_3d(ax)
 
 # In[7]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 from scipy.spatial import distance
 
 row, col = 207, 132
@@ -371,7 +371,7 @@ landsat_index_fname = os.path.join(base_dname, "ArcScene", "landsat_subset_index
 phenosite = pyphenocam.dataaccess.get_site(site_name)
 
 closest_date = datetime.datetime(year, 1, 1, 12) + datetime.timedelta(jday)
-print closest_date
+print(closest_date)
 closest_photo_fname = phenosite.get_closest_fname(closest_date)
 closest_photo_fname = phenosite.get_local_image_fname(closest_photo_fname, IR=False)
 closest_photo_fname_ir = phenosite.get_local_image_fname(closest_photo_fname, IR=True)
@@ -379,12 +379,12 @@ closest_photo_fname_ir = phenosite.get_local_image_fname(closest_photo_fname, IR
 
 # In[10]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 
 
 exposure = pyphenocam.headerextraction.get_exposure(closest_photo_fname)
 exposure_ir = pyphenocam.headerextraction.get_exposure(closest_photo_fname_ir)
-print "Extracted exposure: ", exposure
+print("Extracted exposure: ", exposure)
 sample_photo_fname = phenosite.get_closest_fname(closest_date)
 local_fname = phenosite.get_local_image_fname(sample_photo_fname)
 local_fname_ir = phenosite.get_local_image_fname(sample_photo_fname, IR=True)
@@ -412,7 +412,7 @@ def plot_compare():
 
 # In[11]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(12, 3))
 ax = fig.add_subplot(121)
 
@@ -429,7 +429,7 @@ exposure = pyphenocam.headerextraction.get_exposure(local_fname)
 exposure_ir = pyphenocam.headerextraction.get_exposure(local_fname_ir)
 
 
-print "Extracted exposure: ", exposure
+print("Extracted exposure: ", exposure)
 
 corrected_ndvi = pyphenocam.imageprocessing._get_corrected_ndvi(local_fname, 
                                                                 local_fname_ir, 
@@ -464,7 +464,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 
 # In[ ]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy
@@ -537,7 +537,7 @@ cam_elev = dem_data[camrow, camcol]
 
 TOWER_HEIGHT = 3 #meters
 cam_elev += TOWER_HEIGHT
-print cam_elev
+print(cam_elev)
 
 
 # In[ ]:
@@ -608,7 +608,7 @@ def plot_3d_slope(row, col, ax, fall_line=False):
 
 # In[211]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 from ipywidgets import interactive
 
 col_index, row_index = 0,0
@@ -724,7 +724,7 @@ def get_locator(loc=[.9, 0.5, 0.3, 0.3]):
 
 # In[147]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 sns.set_style("white")
 
 scene_dname = os.path.join(base_dname, "Landsat", "SceneSubset")
@@ -787,7 +787,7 @@ landsat_extents
 
 # In[ ]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 sns.set_style("white")
 
 scene_dname = os.path.join(base_dname, "Landsat", "SceneSubset")
@@ -864,7 +864,7 @@ for col, row in uniq[::skip]:
                        slope, aspect, landsat_ndvi, phenocam_ndvi, phenocam_ndvi_median]
         mapped_output[single_pixel>0.95] = landsat_ndvi
     except IndexError:
-        print "skipping", col, row
+        print("skipping", col, row)
     i+=1
 #     if i > 30:
 #         break
@@ -967,7 +967,7 @@ new_cm = shiftedColorMap(mpl.cm.RdBu, midpoint=center, name='shifted')
 
 # In[ ]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 
 fig, ax = plt.subplots(figsize=(20, 12))
 
@@ -1321,7 +1321,7 @@ sel_pixlrx, sel_pixlry = rc2xy (r+1, c+1)
 
 # In[59]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(projection=modis_proj)
 im = ax.imshow(selected_pixel, origin='upper', extent=modis_extents, transform=modis_proj, 
@@ -1350,7 +1350,7 @@ dem_urx, dem_ury
 
 # In[66]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(projection=landsat_proj)
 
@@ -1377,7 +1377,7 @@ dem_pix_subset.mask = output==0
 
 # In[69]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(10, 10))
 ax = plt.axes(projection=landsat_proj)
 
@@ -1491,7 +1491,7 @@ y = np.dot(X, beta) + e
 results = sm.OLS(y, X).fit()
 
 # Inspect the results
-print results.summary()
+print(results.summary())
 
 
 # In[63]:
@@ -1512,7 +1512,7 @@ data.flatten()
 
 # In[1]:
 
-get_ipython().magic(u'matplotlib qt4')
+get_ipython().magic('matplotlib qt4')
 import matplotlib.pyplot as plt
 # TODO add image and put this code into an appendix at the bottom
 from mpl_toolkits.mplot3d import Axes3D
@@ -1620,7 +1620,7 @@ np.array(y.flatten()).shape
 # In[121]:
 
 for thing in [xpos2, ypos2, zpos2, dx2, dy2, dz2]:
-    print thing.shape
+    print(thing.shape)
 
 
 # In[123]:
@@ -1641,12 +1641,12 @@ import math
 x1,y1,z1 = 521203.13, 4815131.82, 1907.55
 x2,y2,z2 = 521199.24, 4815145.89, 1906.85
 distance = math.sqrt((x2-x1)**2+(y2-y1)**2+(z2 -z1)**2)
-print distance
+print(distance)
 5.5910642993977451
 plunge = math.degrees(math.asin((z2-z1)/distance))
-print "zenith = ", plunge
+print("zenith = ", plunge)
 azimuth = math.degrees(math.atan2((x2-x1),(y2-y1)))
-print "azimuth = ", azimuth
+print("azimuth = ", azimuth)
 
 
 # In[82]:
@@ -1700,7 +1700,7 @@ def map_to_phenocam(landsat_data):
 
             mapped_output[single_pixel>0.95] = landsat_ndvi
         except IndexError:
-            print "skipping", col, row
+            print("skipping", col, row)
 
     mapped_output_m = np.ma.masked_where(index_grid.mask[:,:,0], mapped_output)
     return mapped_output_m
@@ -1728,13 +1728,13 @@ for fname in ndvi_fnames:
     
     out_fname = os.path.join(mapped_dname, 'landsat_{dt.year}_{dt.month:02d}_{dt.day:02d}.npy'.format(dt=landsat_date))
     if not os.path.exists(out_fname):
-        print out_fname
+        print(out_fname)
         mapped = map_to_phenocam(landsat_data)
         data = mapped.data
         data[mapped.mask]=-255
         np.save(out_fname, data)
     else:
-        print("\tskipping " + out_fname)
+        print(("\tskipping " + out_fname))
     
 #     out_fname2 = os.path.join(scene_dname, 'mapped', landsat_just_fname.replace('subset.tif', 'mapped.npy'))
 #     os.rename(out_fname, out_fname2)
@@ -1749,7 +1749,7 @@ for fname in landsat_fnames:
     landsat_date = datetime.datetime(year, 1, 1, 12) + datetime.timedelta(jday)
     
     landsat_fname = os.path.join(scene_dname, fname)
-    print landsat_fname
+    print(landsat_fname)
     landsat = rasterio.open(landsat_fname)
     landsat_data = np.squeeze(landsat.read(masked=True))
     break
@@ -1765,7 +1765,7 @@ for fname in landsat_fnames:
 
 # In[141]:
 
-print landsat_fname
+print(landsat_fname)
 
 
 # In[130]:
@@ -1774,7 +1774,7 @@ mapped_fnames = os.listdir(os.path.join(scene_dname, 'mapped'))
 
 data = {}
 for i, fname in enumerate(mapped_fnames):
-    print i
+    print(i)
     fname_full = os.path.join(scene_dname, 'mapped', fname)
     landsat_fname = fname_full.replace('\\mapped', '')
     landsat = rasterio.open(landsat_fname)
@@ -1873,9 +1873,9 @@ sigma = np.sqrt(MSE)
 # Plot the function, the prediction and the 95% confidence interval based on
 # the MSE
 fig = pl.figure()
-pl.plot(x, f(x), 'r:', label=u'$f(x) = x\,\sin(x)$')
-pl.errorbar(X.ravel(), y, dy, fmt='r.', markersize=10, label=u'Observations')
-pl.plot(x, y_pred, 'b-', label=u'Prediction')
+pl.plot(x, f(x), 'r:', label='$f(x) = x\,\sin(x)$')
+pl.errorbar(X.ravel(), y, dy, fmt='r.', markersize=10, label='Observations')
+pl.plot(x, y_pred, 'b-', label='Prediction')
 pl.fill(np.concatenate([x, x[::-1]]),
         np.concatenate([y_pred - 1.9600 * sigma,
                        (y_pred + 1.9600 * sigma)[::-1]]),
@@ -1919,9 +1919,9 @@ sigma = np.sqrt(MSE)
 # Plot the function, the prediction and the 95% confidence interval based on
 # the MSE
 fig = pl.figure()
-pl.plot(x, f(x), 'r:', label=u'$f(x) = x\,\sin(x)$')
-pl.errorbar(X.ravel(), y, dy, fmt='r.', markersize=10, label=u'Observations')
-pl.plot(x, y_pred, 'b-', label=u'Prediction')
+pl.plot(x, f(x), 'r:', label='$f(x) = x\,\sin(x)$')
+pl.errorbar(X.ravel(), y, dy, fmt='r.', markersize=10, label='Observations')
+pl.plot(x, y_pred, 'b-', label='Prediction')
 pl.fill(np.concatenate([x, x[::-1]]),
         np.concatenate([y_pred - 1.9600 * sigma,
                        (y_pred + 1.9600 * sigma)[::-1]]),

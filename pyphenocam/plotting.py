@@ -2,11 +2,14 @@
 import numpy as np
 import matplotlib as _mpl
 import pandas as pd
+import requests
+import io
 
 try:
     import cartopy
     import cartopy.crs as ccrs
-    from cartopy.io.img_tiles import MapQuestOpenAerial
+    # from cartopy.io.img_tiles import MapQuestOpenAerial
+    from cartopy.io.img_tiles import StamenTerrain
     import cartopy.feature as cfeature
     import cartopy.io
     from cartopy.mpl.geoaxes import GeoAxes
@@ -17,8 +20,8 @@ import matplotlib.pyplot as plt
 
 
 
-import utils
-import imageprocessing
+from . import utils
+from . import imageprocessing
 
 
 ROI_TYPES = {'AG': {'name':'Agriculture',
@@ -68,7 +71,7 @@ def add_rois(ax, site, vistype='image', **kwargs):
         if vistype=='image':
             ax.imshow(roi_image, cmap=_mpl.cm.Greys, alpha=0.4, vmax=1)
         else:
-            if not kwargs.has_key('lw'):
+            if 'lw' not in kwargs:
                 kwargs['lw'] = 2
             xlim, ylim = ax.get_xlim(), ax.get_ylim()
             contour_labels = []   
@@ -108,11 +111,11 @@ def plot_gcc_and_daymet(site, ax, rois=None, start_year=None, end_year=None,
     """given a site makes a chart of the GCC, and temperature and precipitation
     temp and precip only work for sites that have Daymet coverage (continental US only)
     """
-    import daymetpy
+    from . import daymetpy
     
     if not rois:
         rois = []
-        for roi in site.rois.keys():
+        for roi in list(site.rois.keys()):
             rois.append((roi, ROI_TYPES[roi]['linecolor']))
         
     if not start_year:
@@ -127,9 +130,9 @@ def plot_gcc_and_daymet(site, ax, rois=None, start_year=None, end_year=None,
     ax2.spines['right'].set_position(('axes', 1.1))
 
     tcolor, pcolor = 'indianred', 'steelblue'
-    ax1.set_ylabel(u'Temp. (°C)', fontsize=fontsize, color=tcolor)
+    ax1.set_ylabel('Temp. (°C)', fontsize=fontsize, color=tcolor)
     ax1.tick_params(axis='y', colors=tcolor)
-    ax2.set_ylabel(u'Precip. (mm)', fontsize=fontsize, color=pcolor)
+    ax2.set_ylabel('Precip. (mm)', fontsize=fontsize, color=pcolor)
     ax2.tick_params(axis='y', colors=pcolor)
     
     try:
@@ -140,7 +143,7 @@ def plot_gcc_and_daymet(site, ax, rois=None, start_year=None, end_year=None,
         monthlysum = df_daymet.resample("M").sum()
         ax2.bar(monthlysum.index, monthlysum.prcp, width=20, alpha=0.3, color=pcolor, label='Precipitation')
     except Exception as e:
-        print e
+        print(e)
         pass
     
     for roi, color in rois:
@@ -153,7 +156,8 @@ def plot_gcc_and_daymet(site, ax, rois=None, start_year=None, end_year=None,
 
     ax.set_zorder(ax2.get_zorder()+1) # put ax in front of ax2 
     ax.patch.set_visible(False) # hide the 'canvas'
-    
+
+
 def add_inner_title(ax, title, loc=1, font_kwargs=None, **kwargs):
     from matplotlib.offsetbox import AnchoredText
     from matplotlib.patheffects import withStroke
@@ -165,6 +169,7 @@ def add_inner_title(ax, title, loc=1, font_kwargs=None, **kwargs):
     at.txt._text.set_path_effects([withStroke(foreground="w", linewidth=3)])
     return at
 
+
 def bottom_align_cb(ax, im, height=0.02, shrink=0.01, yoffset=0.08):
     
     fig = ax.get_figure()
@@ -175,16 +180,17 @@ def bottom_align_cb(ax, im, height=0.02, shrink=0.01, yoffset=0.08):
     fig.colorbar(im, cax=cax, orientation='horizontal')
     return cax
 
+
 class LocatorMap(GeoAxes):
 
     def __init__(self, networksites=[], *args, **kwargs):
 
-        if not kwargs.has_key('fig'):
+        if 'fig' not in kwargs:
             kwargs['fig'] = plt.gcf()
 
-        self.tiler = MapQuestOpenAerial()
+        self.tiler = StamenTerrain()
         kwargs['map_projection'] = self.tiler.crs
-        if not kwargs.has_key('rect'):
+        if 'rect' not in kwargs:
             kwargs['rect'] = [0, 0, 1, 1]
         super(LocatorMap, self).__init__(*args, **kwargs)
         self.add_image(self.tiler, 3)
@@ -213,7 +219,9 @@ class LocatorMap(GeoAxes):
     def load_sites(self):
         url = "http://phenocam.sr.unh.edu/webcam/roi/roilistinfo/?format=csv"
 
-        self.sites = pd.read_csv(url)
+        x = requests.get(url=url, verify=False).content
+        self.sites = pd.read_csv(io.StringIO(x.decode('utf8')))
+
         self.site_names = list(self.sites.site.unique())
 
         self.scatter(self.sites.lon.tolist(),

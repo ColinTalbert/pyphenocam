@@ -1,10 +1,10 @@
 import os
 import appdirs
 
-import ConfigParser
+import configparser
 
 def initialize_config(fname):
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.add_section('URLS')
     config.set('URLS', 'SITEURL', "http://phenocam.sr.unh.edu/webcam/roi/roilistinfo/?format=csv")
     config.set('URLS', 'ROIURL', "http://phenocam.sr.unh.edu/data/archive/{}/ROI")
@@ -15,21 +15,26 @@ def initialize_config(fname):
     config.set('CACHEDNAME', 'folder', appdirs.user_data_dir("pyphenocam", "USGS"))
 
     # Writing our configuration file to 'example.cfg'
-    with open(fname, 'wb') as configfile:
+    with open(fname, 'w') as configfile:
         config.write(configfile)
+
 
 def get_config_fname():
     '''Find the location of the package config file
     '''
-    config_fname = os.path.join(appdirs.user_data_dir("pyphenocam", "USGS"), '.pyphenocamconfig')
-    
+    config_dname = appdirs.user_data_dir("pyphenocam", "USGS")
+    config_fname = os.path.join(config_dname, '.pyphenocamconfig')
+
+    if not os.path.exists(config_dname):
+        os.makedirs(config_dname)
+
     if not os.path.exists(config_fname):
         initialize_config(config_fname)
     
     return config_fname
 
 def get_config():
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(get_config_fname())
     return config
     
@@ -39,12 +44,12 @@ def get_cache_dname():
     
 def set_cache_dname(cache_dname):
     if not os.path.exists(cache_dname):
-        raise Exception, "{} does not exist!".format(cache_dname)
+        raise Exception("{} does not exist!".format(cache_dname))
     
     config = get_config()
     config.set('CACHEDNAME', 'folder', cache_dname)
     
-    with open(get_config_fname(), 'wb') as configfile:
+    with open(get_config_fname(), 'w') as configfile:
         config.write(configfile)
 
 def get_url(which='SITEURL'):

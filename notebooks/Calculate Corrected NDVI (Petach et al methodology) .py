@@ -37,7 +37,7 @@ which_img = 200
 
 # In[18]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(18, 12))
 ax = fig.add_subplot(111)
 local_fname = harvard.get_local_image_fname(harvard.midday_fnames[which_img])
@@ -50,12 +50,12 @@ pyphenocam.plotting.format_photo_axes(ax)
 plt.legend(loc=4)
 
 exposure = float(pyphenocam.headerextraction.get_exposure(local_fname))
-print "Extracted exposure: ", exposure
+print("Extracted exposure: ", exposure)
 
 
 # In[19]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 local_fname_ir = harvard.get_local_image_fname(harvard.midday_fnames[which_img], IR=True)
 
 fig = plt.figure(figsize=(18, 12))
@@ -69,7 +69,7 @@ pyphenocam.plotting.add_rois(ax, harvard, vistype='line', lw=7, alpha=0.5)
 
 pyphenocam.plotting.format_photo_axes(ax)
 nir_exposure = float(pyphenocam.headerextraction.get_exposure(local_fname_ir))
-print nir_exposure
+print(nir_exposure)
 
 
 # In[20]:
@@ -120,7 +120,7 @@ for i, c in enumerate([(r_prime, '$R^\prime_{dn}$', mpl.cm.Reds),
                        (ndvi_c2, '$Radiometer NDVI$', mpl.cm.RdYlGn),]):
     
     c, title, cm = c
-    print i, title
+    print(i, title)
 #     print c[s]
     
     if 'NDVI' in title:
@@ -149,23 +149,23 @@ plt.colorbar()
 
 flat_ndvi = ndvi_c.flatten()
 #but this data has a few nans, let's remove them from the histogram
-print "number of NaN values = {}".format(np.isnan(flat_ndvi).sum())
+print("number of NaN values = {}".format(np.isnan(flat_ndvi).sum()))
 flat_ndvi_nonan = flat_ndvi[~np.isnan(flat_ndvi)]
 #but this data has a few number below or above the expecteded NDVI range
 #let's remove them from the histogram
-print "number of values > 1 = {}".format((flat_ndvi_nonan > 1.0).sum())
-print "number of values > 1 = {}".format((flat_ndvi_nonan < -1.0).sum())
+print("number of values > 1 = {}".format((flat_ndvi_nonan > 1.0).sum()))
+print("number of values > 1 = {}".format((flat_ndvi_nonan < -1.0).sum()))
 ndvi_good = flat_ndvi_nonan[np.where(np.logical_and(flat_ndvi_nonan<=1.00, flat_ndvi_nonan>=-1.0))]
 
 
 flat_ndvic = ndvi_c2.flatten()
 #but this data has a few nans, let's remove them from the histogram
-print "number of NaN values = {}".format(np.isnan(flat_ndvic).sum())
+print("number of NaN values = {}".format(np.isnan(flat_ndvic).sum()))
 flat_ndvic_nonan = flat_ndvic[~np.isnan(flat_ndvic)]
 #but this data has a few number below or above the expecteded NDVI range
 #let's remove them from the histogram
-print "number of values > 1 = {}".format((flat_ndvic_nonan > 1.0).sum())
-print "number of values > 1 = {}".format((flat_ndvic_nonan < -1.0).sum())
+print("number of values > 1 = {}".format((flat_ndvic_nonan > 1.0).sum()))
+print("number of values > 1 = {}".format((flat_ndvic_nonan < -1.0).sum()))
 ndvic_good = flat_ndvic_nonan[np.where(np.logical_and(flat_ndvic_nonan<=1.00, flat_ndvic_nonan>=-1.0))]
 
 

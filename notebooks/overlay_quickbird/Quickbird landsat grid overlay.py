@@ -50,7 +50,7 @@ landsat_data = landsat.read()
 
 # In[4]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 plt.imshow(landsat_data[0,:,:], interpolation='none')
 pyphenocam.plotting.format_photo_axes(plt.gca())
 
@@ -76,7 +76,7 @@ which_img = -197
 
 # In[7]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111)
 local_fname = quickbird.get_local_image_fname(quickbird.midday_fnames[which_img])
@@ -90,7 +90,7 @@ pyphenocam.plotting.format_photo_axes(ax)
 # plt.legend(loc=1)
 
 exposure = pyphenocam.headerextraction.get_exposure(local_fname)
-print "Extracted exposure: ", exposure
+print("Extracted exposure: ", exposure)
 
 
 # ### Our landsat grid image create in ArcScene
@@ -200,7 +200,7 @@ plt.scatter(*(x, y))
 
 # In[18]:
 
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy
@@ -244,7 +244,7 @@ ax.add_feature(states_provinces, edgecolor='gray')
 
 # In[19]:
 
-get_ipython().magic(u'matplotlib qt4')
+get_ipython().magic('matplotlib qt4')
 from ipywidgets import interactive
 
 col_index, row_index = 0,0

@@ -1,7 +1,7 @@
-import dataaccess
-import utils
-import plotting
-import imageprocessing
-import headerextraction
+from . import dataaccess
+from . import utils
+from . import plotting
+from . import imageprocessing
+from . import headerextraction
 
-import config
+from . import config
